@@ -26,13 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 2. ربط المسارات بأسلوب الـ Versioning الذي اخترته
-# هنا نربط ملف route.py ببادئة api/v1/community
-app.include_router(
-    community_router, 
-    prefix="/api/v1/community", 
-    tags=["Community"]
-)
+
 
 
 
@@ -72,3 +66,4 @@ async def root():
         "status": "Active",
         "docs": "/docs"  # رابط التوثيق التفاعلي Swagger
     }
+
