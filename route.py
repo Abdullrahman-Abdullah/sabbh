@@ -11,7 +11,7 @@ from community import UserLogin, UserResponse
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from database import get_db  # تأكد من استيراد دالة الحصول على قاعدة البيانات
-from modal import modal    # تأكد من استيراد موديلات قاعدة البيانات
+import modal    # تأكد من استيراد موديلات قاعدة البيانات
 from community import PrayerResponse  # تأكد من استيراد السكيمات
 
 
@@ -177,4 +177,5 @@ async def contribute_to_campaign(campaign_id: int, count: int, db: Session = Dep
     campaign.current_count += count
     db.commit()
     db.refresh(campaign)
+
     return {"status": "success", "new_total": campaign.current_count}
