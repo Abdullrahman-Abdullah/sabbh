@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مجتمع الأهداف الروحية - تطوير الذات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-mosque"></i>
+                <span>روحانيات</span>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link active">
+                    <i class="fas fa-home"></i> الرئيسية
+                </a>
+                <a href="goals.html" class="nav-link">
+                    <i class="fas fa-bullseye"></i> الأهداف
+                </a>
+                <a href="community.html" class="nav-link">
+                    <i class="fas fa-users"></i> المجتمع
+                </a>
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-chart-line"></i> لوحتي
+                </a>
+                
+                <div class="user-section">
+                    <div class="user-avatar" id="userAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user-circle"></i> الملف الشخصي
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog"></i> الإعدادات
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- الهيرو -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="highlight">مجتمع الأهداف الروحية</span>
+                </h1>
+                <p class="hero-description">
+                    شارك أهدافك في التسبيح والاستغفار والدعاء مع مجتمع متعاون، 
+                    وتابع تقدمك نحو التقرب إلى الله
+                </p>
+                <div class="hero-buttons">
+                    <a href="goals.html" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> ابدأ هدفًا جديدًا
+                    </a>
+                    <a href="community.html" class="btn btn-secondary">
+                        <i class="fas fa-users"></i> استكشف المجتمع
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-icon">
+                    <i class="fas fa-hands-praying"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- إحصائيات سريعة -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>إحصائيات المجتمع</h2>
+                <p>انضم إلى آلاف الأشخاص الذين يحققون أهدافهم الروحية</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 id="totalGoals">0</h3>
+                    <p>هدف نشط</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 id="activeUsers">0</h3>
+                    <p>مشارك نشط</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-praying-hands"></i>
+                    </div>
+                    <h3 id="prayersCount">0</h3>
+                    <p>تسبيحة/استغفار</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 id="duasCount">0</h3>
+                    <p>دعاء مرفوع</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- أنواع الأهداف -->
+    <section class="goals-types-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>أنواع الأهداف المتاحة</h2>
+                <p>اختر نوع الهدف الذي يناسب تطلعاتك الروحية</p>
+            </div>
+            
+            <div class="types-grid">
+                <div class="type-card">
+                    <div class="type-icon tasbeeh">
+                        <i class="fas fa-pray"></i>
+                    </div>
+                    <h3>التسبيح</h3>
+                    <p>سبحان الله، الحمد لله، الله أكبر، لا إله إلا الله</p>
+                    <ul class="type-features">
+                        <li><i class="fas fa-check"></i> عداد إلكتروني</li>
+                        <li><i class="fas fa-check"></i> تذكيرات يومية</li>
+                        <li><i class="fas fa-check"></i> مشاركة التقدم</li>
+                    </ul>
+                </div>
+                
+                <div class="type-card">
+                    <div class="type-icon istighfar">
+                        <i class="fas fa-hands-praying"></i>
+                    </div>
+                    <h3>الاستغفار</h3>
+                    <p>أستغفر الله العظيم وأتوب إليه</p>
+                    <ul class="type-features">
+                        <li><i class="fas fa-check"></i> تتبع الاستغفار</li>
+                        <li><i class="fas fa-check"></i> فوائد يومية</li>
+                        <li><i class="fas fa-check"></i> جداول متنوعة</li>
+                    </ul>
+                </div>
+                
+                <div class="type-card">
+                    <div class="type-icon dua">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>الدعاء</h3>
+                    <p>ادعُ لنفسك أو لأحبائك بالمشاركة المجتمعية</p>
+                    <ul class="type-features">
+                        <li><i class="fas fa-check"></i> دعاء جماعي</li>
+                        <li><i class="fas fa-check"></i> خصوصية متاحة</li>
+                        <li><i class="fas fa-check"></i> أدعية مستجابة</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- أهداف المجتمع -->
+    <section class="community-goals-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>أهداف المجتمع الأخيرة</h2>
+                <p>شارك وتابع أهداف الأعضاء الآخرين</p>
+            </div>
+            
+            <div class="goals-grid" id="communityGoals">
+                <!-- سيتم تعبئتها من JavaScript -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>جاري تحميل الأهداف...</p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="community.html" class="btn btn-outline">
+                    <i class="fas fa-eye"></i> عرض جميع الأهداف
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- التذييل -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-mosque"></i>
+                        <span>روحانيات</span>
+                    </div>
+                    <p class="footer-description">
+                        مجتمع إلكتروني يهدف إلى تقريب القلوب وتشجيع العبادات 
+                        من خلال مشاركة الأهداف الروحية.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="goals.html">إنشاء هدف</a></li>
+                        <li><a href="community.html">المجتمع</a></li>
+                        <li><a href="dashboard.html">لوحة التحكم</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>الدعم</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">الأسئلة الشائعة</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الاستخدام</a></li>
+                        <li><a href="#">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> info@rohaniyat.com</p>
+                        <p><i class="fas fa-phone"></i> +966 123 456 789</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 روحانيات. جميع الحقوق محفوظة.</p>
+                <p>هذا التطبيق غير ربحي، أنشئ لخدمة المجتمع الإسلامي.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- سكريبتات -->
+    <script src="app.js"></script>
+    <script src="api.js"></script>
+    <script>
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحديث الإحصائيات
+            updateStats();
+            
+            // تحميل أهداف المجتمع
+            loadCommunityGoals();
+            
+            // إدارة القائمة المتحركة
+            setupMobileMenu();
+            
+            // إدارة القائمة المنسدلة للمستخدم
+            setupUserDropdown();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تطبيق سكينة - تسبيح للأشخاص</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sage-green: #7ca982;
+            --dusty-rose: #d4a5a5;
+            --cream-bg: #f8f9f5;
+            --dark-olive: #3d5a44;
+            --white: #ffffff;
+            --light-blue: #a5c8d4;
+            --purple: #b4a5d4;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--cream-bg);
+            margin: 0; padding: 0;
+            color: var(--dark-olive);
+            height: 100vh; overflow: hidden;
+            direction: rtl;
+        }
+        .target-achieved-msg {
+    animation: pulse Green 2s infinite;
+    box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);
+}
+
+@keyframes pulseGreen {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+        /* الهيدر */
+        .header {
+            background: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 0 0 25px 25px;
+        }
+        
+        .modal-input {
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            border-radius: 10px; 
+            border: 1px solid #ddd;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* منطقة المحتوى */
+        .content-area { 
+            height: calc(100vh - 260px); 
+            overflow-y: auto; 
+            padding: 20px; 
+        }
+        
+        .page { 
+            display: none; 
+        }
+        
+        .page.active { 
+            display: block; 
+            animation: fadeIn 0.3s; 
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+
+        /* زر التسبيح الضخم */
+        .praise-section { 
+            text-align: center; 
+            padding-top: 30px; 
+        }
+        
+        .counter-btn {
+            width: 250px; 
+            height: 250px; 
+            border-radius: 50%;
+            background: var(--white); 
+            border: 12px solid var(--sage-green);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: inline-flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            cursor: pointer; 
+            transition: 0.1s; 
+            margin-bottom: 25px;
+        }
+        
+        .counter-btn:active { 
+            transform: scale(0.95); 
+            border-color: var(--dusty-rose); 
+        }
+        
+        .counter-btn .number { 
+            font-size: 60px; 
+            font-weight: bold; 
+            color: var(--sage-green); 
+        }
+        /* إضافة هذه الأنماط في قسم style */
+.active-person-badge {
+    background: linear-gradient(135deg, var(--light-blue), #8bb8d4);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    font-size: 0.95em;
+    margin-bottom: 15px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(125, 169, 130, 0.2);
+    animation: slideDown 0.3s ease;
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 300px;
+    margin: 0 auto 20px auto;
+}
+
+.active-person-badge i {
+    margin-left: 8px;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+#campaignsTab{
+    margin-bottom: 15svh;
+}
+
+/* تعديل زر التسبيح ليعكس الحالة النشطة */
+.counter-btn.active-person {
+    border-color: var(--light-blue) !important;
+    box-shadow: 0 10px 30px rgba(165, 200, 212, 0.3);
+}
+
+.counter-btn.active-campaign {
+    border-color: var(--sage-green) !important;
+    box-shadow: 0 10px 30px rgba(124, 169, 130, 0.3);
+}
+
+/* تأثير النقر للشخص النشط */
+.counter-btn.active-person:active {
+    border-color: var(--dusty-rose) !important;
+}
+        /* البطاقات */
+        .card { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border-right: 5px solid var(--dusty-rose); 
+        }
+        
+        .person-card {
+            border-right: 5px solid var(--light-blue);
+        }
+        
+        .campaign-card {
+            border-right: 5px solid var(--dusty-rose);
+        }
+        
+        .progress-bar { 
+            height: 8px; 
+            background: #eee; 
+            border-radius: 4px; 
+            margin: 10px 0; 
+            overflow: hidden; 
+        }
+        
+        .progress-fill { 
+            height: 100%; 
+            background: var(--sage-green); 
+            transition: 0.5s; 
+        }
+
+        /* النافذة المنبثقة */
+        .modal { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            display: none; 
+            align-items: flex-end; 
+            z-index: 1000; 
+        }
+        
+        .modal.active { 
+            display: flex; 
+        }
+        
+        .modal-content { 
+            background: white; 
+            width: 100%; 
+            border-radius: 25px 25px 0 0; 
+            padding: 25px; 
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* شريط التنقل */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            height: 70px; 
+            background: white; 
+            display: flex; 
+            justify-content: space-around; 
+            border-top: 1px solid #eee; 
+        }
+        
+        .nav-item { 
+            border: none; 
+            background: none; 
+            color: #aaa; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            font-family: inherit; 
+        }
+        
+        .nav-item.active { 
+            color: var(--sage-green); 
+            font-weight: bold; 
+        }
+
+        .btn-action { 
+            background: var(--sage-green); 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 10px; 
+            font-size: 18px; 
+            margin-top: 10px; 
+        }
+        
+        .btn-contribute {
+            background: var(--light-blue);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        
+        .btn-pray-for {
+            background: var(--purple);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        
+        .active-person-badge {
+            background: var(--sage-green);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .person-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .person-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--dark-olive);
+        }
+        
+        .category-tag {
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            font-family: inherit;
+            font-size: 1em;
+            color: #999;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--sage-green);
+            border-bottom: 3px solid var(--sage-green);
+            font-weight: bold;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 90px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--sage-green);
+            color: white;
+            border: none;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .prayer-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1 id="pageTitle">تسبيح</h1>
+        <button onclick="openModal('settingsModal')" style="border:none; background:none; font-size:24px; color:var(--sage-green)">
+            <i class="fas fa-cog"></i>
+        </button>
+    </header>
+
+    <div class="content-area">
+        <section id="praisePage" class="page active">
+            <div id="activePersonBadge" class="active-person-badge" style="display:none;">
+                <i class="fas fa-user"></i> أنت تسبح لـ: <span id="activePersonName"></span>
+            </div>
+            
+            <div class="praise-section">
+                <div class="counter-btn" 
+     onclick="doPraise(event)" 
+     style="touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none;">
+    <span id="mainCounter" class="number">0</span>
+    <span style="color:#999">اضغط للتسبيح</span>
+</div>
+                
+                <div class="prayer-summary">
+                    <h3 style="margin-top:0;">إحصائيات التسبيح</h3>
+                    <div style="display:flex; justify-content:space-around;">
+                        <div>
+                            <div style="font-size:1.5em; font-weight:bold; color:var(--sage-green);" id="totalPraise">0</div>
+                            <div style="font-size:0.9em; color:#666;">إجمالي تسبيحاتك</div>
+                        </div>
+                        <div>
+                            <div style="font-size:1.5em; font-weight:bold; color:var(--light-blue);" id="todayPraise">0</div>
+                            <div style="font-size:0.9em; color:#666;">تسبيحات اليوم</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-action" style="background:var(--dusty-rose); width:80%" onclick="openModal('helpModal')">طلب استغاثة من الجميع</button>
+            </div>
+        </section>
+
+        <section id="communityPage" class="page">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('campaignsTab', this)">الحملات</button>
+                <button class="tab-btn" onclick="switchTab('personsTab', this)">الأشخاص</button>
+            </div>
+            
+            <div id="campaignsTab" class="tab-content">
+                <div id="campaignsContainer">
+                    <p style="text-align: center; color: #999;">جاري تحميل الحملات...</p>
+                </div>
+            </div>
+            
+            <div id="personsTab" class="tab-content" style="display:none;">
+                <div id="personsContainer">
+                    <p style="text-align: center; color: #999;">جاري تحميل الأشخاص...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <button class="floating-btn" onclick="openModal('addPersonModal')">
+        <i class="fas fa-user-plus"></i>
+    </button>
+
+    <nav class="bottom-nav">
+        <button id="praiseBtn" class="nav-item active" onclick="switchPage('praisePage', 'تسبيح', this)">
+            <i class="fas fa-fingerprint"></i><span>تسبيح</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('communityPage', 'الحملات', this)">
+            <i class="fas fa-mosque"></i><span>الحملات</span>
+        </button>
+    </nav>
+
+    <!-- نافذة إضافة شخص جديد -->
+    <div id="addPersonModal" class="modal" onclick="closeOnOverlay(event)">
+        <div class="modal-content">
+            <h3>إضافة شخص للتسبيح له</h3>
+            <p style="font-size: 0.9em; color: #666;">أضف شخصاً لتسبح له وتحصّل الأجر أنت وله معاً.</p>
+            
+            <input type="text" id="personName" placeholder="اسم الشخص (مثلاً: والدي، صديقي أحمد)" class="modal-input">
+            <textarea id="personDesc" placeholder="تفاصيل أو حالة الشخص (اختياري)" class="modal-input" style="height: 80px;"></textarea>
+            
+            <div style="display:flex; gap:10px;">
+                <select id="personCategory" class="modal-input" style="flex:1;">
+                    <option value="عائلة">عائلة</option>
+                    <option value="أصدقاء">أصدقاء</option>
+                    <option value="مرضى">مرضى</option>
+                    <option value="أموات">أموات</option>
+                    <option value="عام">عام</option>
+                </select>
+                
+                <input type="number" id="personTarget" placeholder="هدف التسبيح" class="modal-input" style="flex:1;" value="1000">
+            </div>
+            
+            <button class="btn-action" onclick="addNewPerson()">إضافة الشخص</button>
+        </div>
+    </div>
+
+    <!-- نافذة طلب الاستغاثة -->
+    <div id="helpModal" class="modal" onclick="closeOnOverlay(event)">
+        <div class="modal-content">
+            <h3>انشر نداء استغاثة بالذكر</h3>
+            <p style="font-size: 0.9em; color: #666;">سيظهر هذا النداء لجميع المستخدمين للمشاركة في الأجر.</p>
+            
+            <input type="text" id="helpTitle" placeholder="عنوان النداء (مثلاً: استغفار للمطر)" class="modal-input">
+            <textarea id="helpDesc" placeholder="اكتب تفاصيل أو دعاء..." class="modal-input" style="height: 80px;"></textarea>
+            <input type="number" id="helpTarget" placeholder="العدد المطلوب (مثلاً: 1000)" class="modal-input">
+            
+            <button class="btn-action" onclick="broadcastHelp()">إرسال النداء للجميع</button>
+        </div>
+    </div>
+
+    <!-- نافذة الإعدادات -->
+    <div id="settingsModal" class="modal" onclick="closeOnOverlay(event)">
+        <div class="modal-content">
+            <h3>إعدادات الملف الشخصي</h3>
+            <input type="text" id="userNameInput" placeholder="اكتب اسمك الكريم" class="modal-input">
+            
+            <h4 style="margin-top:20px;">الإحصائيات الشخصية</h4>
+            <div style="background:#f9f9f9; padding:15px; border-radius:10px;">
+                <div>إجمالي تسبيحاتك: <span id="statTotal" style="font-weight:bold;">0</span></div>
+                <div>تسبيحات هذا الأسبوع: <span id="statWeek" style="font-weight:bold;">0</span></div>
+                <div>عدد الأشخاص الذين تسبح لهم: <span id="statPersons" style="font-weight:bold;">0</span></div>
+                <div>عدد الحملات التي ساهمت فيها: <span id="statCampaigns" style="font-weight:bold;">0</span></div>
+            </div>
+            
+            <button class="btn-action" onclick="saveUserName()">حفظ الاسم</button>
+            <button class="btn-action" style="background:#666; margin-top:10px;" onclick="clearAllData()">مسح جميع البيانات المحلية</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. الإعدادات العامة
+        const BASE_URL = "http://10.175.109.197:4444"; 
+        const WS_URL = "ws://10.175.109.197:4444";
+
+        let localCount = 0;
+        let todayCount = 0;
+        let totalCount = 0;
+        let userId = localStorage.getItem('user_id') || Math.floor(Math.random() * 1000000);
+        localStorage.setItem('user_id', userId);
+
+        let socket;
+        let activeCampaignId = null;
+        let activePersonId = null;
+        let offlineBuffer = 0;
+        let persons = JSON.parse(localStorage.getItem('persons')) || [];
+
+        function initWebSocket() {
+    try {
+        socket = new WebSocket(`${WS_URL}/ws/help`);
+
+        socket.onopen = () => {
+            console.log("متصل بنظام الاستغاثة الحي");
+            // إرسال بيانات المستخدم عند الاتصال
+            socket.send(JSON.stringify({
+                type: "USER_CONNECTED",
+                user_id: userId,
+                user_name: localStorage.getItem('user_name') || "مستخدم"
+            }));
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            
+            if(data.type === "HELP_REQUEST") {
+                const currentUserName = localStorage.getItem('user_name');
+                if(data.username !== currentUserName) {
+                    if(confirm(`أخونا ${data.username} يحتاج مساعدة في ${data.count} تسبيحة. هل تعينه؟`)) {
+                        alert("جزاك الله خيراً، تقبل الله منك.");
+                    }
+                }
+            }
+            
+            // استقبال تحديثات الحملات
+            if(data.type === "PRAYER_UPDATE") {
+                updateCampaignCounter(data.prayer_id, data.new_count);
+            }
+            
+            // استقبال إشعار إكمال الحملة
+            if(data.type === "PRAYER_COMPLETED") {
+                if(confirm(`مبارك! تم إكمال الحملة "${data.title}". هل تريد رؤية الحملات الأخرى؟`)) {
+                    loadCampaigns();
+                }
+            }
+        };
+
+        socket.onclose = () => {
+            console.log("انقطع اتصال WS، إعادة محاولة بعد 3 ثوانٍ...");
+            setTimeout(initWebSocket, 3000);
+        };
+    } catch (e) {
+        console.error("خطأ في تشغيل WebSocket:", e);
+    }
+}
+// إضافة هذه الدالة بعد تعريف المتغيرات وقبل window.onload
+function updateActiveDisplay() {
+    console.log("🔄 تحديث العرض النشط...");
+    
+    const badge = document.getElementById('activePersonBadge');
+    const counterBtn = document.querySelector('.counter-btn');
+    
+    // تحقق من عناصر DOM
+    if (!badge) {
+        console.warn("⚠️ عنصر activePersonBadge غير موجود");
+        return;
+    }
+    
+    if (!counterBtn) {
+        console.warn("⚠️ عنصر counterBtn غير موجود");
+    }
+    
+    // حالة 1: هناك شخص نشط
+    if (activePersonId) {
+        console.log(`👤 شخص نشط: ${activePersonId}`);
+        
+        // البحث عن الشخص النشط في المصفوفة
+        const activePerson = persons.find(p => p.id === activePersonId);
+        
+        if (activePerson) {
+            // تحديث البادج
+            badge.style.display = 'block';
+            const nameSpan = document.getElementById('activePersonName');
+            if (nameSpan) {
+                nameSpan.textContent = activePerson.name;
+            }
+            
+            // تحديث لون زر التسبيح
+            counterBtn.style.borderColor = 'var(--light-blue)';
+            
+            // إضافة زر الإغلاق إذا لم يكن موجوداً
+            addCloseButtonToBadge();
+            
+            console.log(`✅ تم تحديث العرض للشخص: ${activePerson.name}`);
+        } else {
+            // إذا لم يتم العثور على الشخص، قم بتنظيف
+            console.warn(`⚠️ الشخص النشط ${activePersonId} غير موجود في المصفوفة`);
+            clearActivePerson();
+        }
+    }
+    // حالة 2: هناك حملة نشطة
+    else if (activeCampaignId) {
+        console.log(`🎯 حملة نشطة: ${activeCampaignId}`);
+        
+        // إخفاء بادج الشخص
+        badge.style.display = 'none';
+        
+        // لون زر التسبيح للحملات
+        counterBtn.style.borderColor = 'var(--sage-green)';
+        
+        console.log(`✅ تم تحديث العرض للحملة`);
+    }
+    // حالة 3: لا شيء نشط (تسبيح عام)
+    else {
+        console.log("🌍 تسبيح عام");
+        
+        // إخفاء بادج الشخص
+        badge.style.display = 'none';
+        
+        // لون زر التسبيح العام
+        counterBtn.style.borderColor = 'var(--sage-green)';
+        
+        console.log(`✅ تم تحديث العرض للتسبيح العام`);
+    }
+}
+
+// دالة مساعدة لإضافة زر الإغلاق للبادج
+function addCloseButtonToBadge() {
+    const badge = document.getElementById('activePersonBadge');
+    if (!badge) return;
+    
+    // تحقق إذا كان زر الإغلاق موجوداً بالفعل
+    if (badge.querySelector('.badge-close-btn')) return;
+    
+    // إنشاء زر الإغلاق
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'badge-close-btn';
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.style.cssText = `
+        margin-right: 10px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9em;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    `;
+    
+    // إضافة تأثير عند التحويم
+    closeBtn.onmouseover = () => {
+        closeBtn.style.background = 'rgba(255,255,255,0.3)';
+    };
+    closeBtn.onmouseout = () => {
+        closeBtn.style.background = 'rgba(255,255,255,0.2)';
+    };
+    
+    // إضافة حدث النقر
+    closeBtn.onclick = (e) => {
+        e.stopPropagation(); // منع انتشار الحدث
+        switchToGeneralPraise();
+    };
+    
+    // إضافة الزر للبادج
+    badge.insertBefore(closeBtn, badge.firstChild);
+}
+
+// تعديل دالة switchToGeneralPraise
+function switchToGeneralPraise() {
+    console.log("🔄 العودة للتسبيح العام");
+    
+    // إزالة الشخص النشط
+    if (activePersonId) {
+        clearActivePerson();
+    }
+    
+    // إزالة الحملة النشطة
+    if (activeCampaignId) {
+        localStorage.removeItem('active_campaign');
+        activeCampaignId = null;
+    }
+    
+    // تحديث الواجهة
+    updateActiveDisplay();
+    
+    // عرض تنبيه
+    showTemporaryAlert('أنت الآن تسبح تسبيحاً عاماً', 'info');
+    
+    // تحديث عنوان الصفحة
+    document.getElementById('pageTitle').innerText = 'تسبيح';
+}
+
+// تعديل دالة clearActivePerson
+function clearActivePerson() {
+    console.log(`🗑️ إزالة الشخص النشط`);
+    
+    // إعادة تعيين المتغير
+    activePersonId = null;
+    
+    // إزالة من localStorage
+    localStorage.removeItem('active_person');
+    
+    // تحديث عرض الأشخاص
+    if (persons && persons.length > 0) {
+        loadPersons();
+    }
+}
+
+// تعديل دالة setActivePerson
+function setActivePerson(id, name) {
+    console.log(`👤 تعيين الشخص النشط: ${name} (${id})`);
+    
+    // 1. إزالة الحملة النشطة إذا كانت موجودة
+    if (activeCampaignId) {
+        localStorage.removeItem('active_campaign');
+        activeCampaignId = null;
+    }
+    
+    // 2. تعيين الشخص النشط
+    activePersonId = id;
+    
+    // 3. حفظ في localStorage
+    localStorage.setItem('active_person', JSON.stringify({id, name}));
+    
+    // 4. تحديث الواجهة
+    updateActiveDisplay();
+    
+    // 5. تحديث عرض الأشخاص
+    setTimeout(() => {
+        loadPersons();
+    }, 100);
+    
+    // 6. الانتقال لصفحة التسبيح إذا كنا في صفحة الحملات
+    const communityPage = document.getElementById('communityPage');
+    if (communityPage && communityPage.classList.contains('active')) {
+        setTimeout(() => {
+            switchPage('praisePage', `تسبيح لـ: ${name}`, document.getElementById('praiseBtn'));
+        }, 200);
+    }
+    
+    // 7. عرض تنبيه
+    setTimeout(() => {
+        showTemporaryAlert(`أنت الآن تسبح لـ: ${name}`, 'success');
+    }, 300);
+}
+
+// تعديل دالة startContributing
+function startContributing(campaignId, campaignTitle) {
+    console.log(`🎯 بدء المساهمة في الحملة ${campaignId}: ${campaignTitle}`);
+    
+    // 1. إزالة الشخص النشط إذا كان موجوداً
+    if (activePersonId) {
+        clearActivePerson();
+    }
+    
+    // 2. تعيين الحملة النشطة
+    activeCampaignId = campaignId;
+    
+    // 3. حفظ الحملة النشطة
+    localStorage.setItem('active_campaign', JSON.stringify({
+        id: campaignId,
+        title: campaignTitle
+    }));
+    
+    // 4. تحديث الواجهة
+    updateActiveDisplay();
+    
+    // 5. الانتقال لصفحة التسبيح
+    setTimeout(() => {
+        switchPage('praisePage', `مساهمة في: ${campaignTitle}`, document.getElementById('praiseBtn'));
+    }, 100);
+    
+    // 6. عرض تنبيه
+    setTimeout(() => {
+        showTemporaryAlert(`أنت الآن تسبح لـ: ${campaignTitle}`, 'info');
+    }, 200);
+}
+// =========== تعريف دالة updateActivePersonBadge ===========
+function updateActivePersonBadge() {
+    console.log("🔄 تحديث بادج الشخص النشط...");
+    
+    const badge = document.getElementById('activePersonBadge');
+    if (!badge) {
+        console.warn("⚠️ عنصر activePersonBadge غير موجود في الصفحة");
+        return;
+    }
+    
+    // حالة 1: هناك شخص نشط
+    if (activePersonId) {
+        // البحث عن الشخص في المصفوفة
+        const activePerson = persons.find(p => p.id === activePersonId);
+        
+        if (activePerson) {
+            // عرض البادج وتحديث الاسم
+            badge.style.display = 'flex';
+            const nameSpan = document.getElementById('activePersonName');
+            if (nameSpan) {
+                nameSpan.textContent = activePerson.name;
+            }
+            
+            // تحديث لون زر التسبيح
+            const counterBtn = document.querySelector('.counter-btn');
+            if (counterBtn) {
+                counterBtn.style.borderColor = 'var(--light-blue)';
+                counterBtn.classList.add('active-person');
+                counterBtn.classList.remove('active-campaign');
+            }
+            
+            // إضافة زر الإغلاق إذا لم يكن موجوداً
+            addCloseButtonToBadge();
+            
+            console.log(`✅ تم عرض بادج الشخص: ${activePerson.name}`);
+        } else {
+            // الشخص غير موجود، إخفاء البادج
+            badge.style.display = 'none';
+            console.warn(`⚠️ الشخص النشط ${activePersonId} غير موجود`);
+        }
+    }
+    // حالة 2: لا يوجد شخص نشط
+    else {
+        badge.style.display = 'none';
+        
+        // إعادة لون زر التسبيح الافتراضي
+        const counterBtn = document.querySelector('.counter-btn');
+        if (counterBtn) {
+            counterBtn.style.borderColor = 'var(--sage-green)';
+            counterBtn.classList.remove('active-person', 'active-campaign');
+        }
+        
+        console.log("ℹ️ لا يوجد شخص نشط، تم إخفاء البادج");
+    }
+}
+
+// دالة مساعدة لإضافة زر الإغلاق
+function addCloseButtonToBadge() {
+    const badge = document.getElementById('activePersonBadge');
+    if (!badge) return;
+    
+    // تحقق إذا كان زر الإغلاق موجوداً بالفعل
+    if (badge.querySelector('.badge-close-btn')) {
+        return;
+    }
+    
+    // إنشاء زر الإغلاق
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'badge-close-btn';
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.setAttribute('aria-label', 'إغلاق');
+    closeBtn.title = 'العودة للتسبيح العام';
+    
+    // أنماط CSS
+    closeBtn.style.cssText = `
+        margin-left: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9em;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        padding: 0;
+        flex-shrink: 0;
+    `;
+    
+    // تأثيرات التحويم
+    closeBtn.onmouseenter = function() {
+        this.style.background = 'rgba(255, 255, 255, 0.3)';
+        this.style.transform = 'scale(1.1)';
+    };
+    
+    closeBtn.onmouseleave = function() {
+        this.style.background = 'rgba(255, 255, 255, 0.2)';
+        this.style.transform = 'scale(1)';
+    };
+    
+    // حدث النقر
+    closeBtn.onclick = function(e) {
+        e.stopPropagation();
+        switchToGeneralPraise();
+    };
+    
+    // إضافة الزر للبادج
+    badge.insertBefore(closeBtn, badge.firstChild);
+}
+
+// دالة للعودة للتسبيح العام
+function switchToGeneralPraise() {
+    console.log("🔄 العودة للتسبيح العام");
+    
+    // إعادة تعيين المتغيرات
+    activePersonId = null;
+    activeCampaignId = null;
+    
+    // تنظيف localStorage
+    localStorage.removeItem('active_person');
+    localStorage.removeItem('active_campaign');
+    
+    // تحديث البادج
+    updateActivePersonBadge();
+    
+    // تحديث عرض الأشخاص إذا كانوا مرئيين
+    if (document.getElementById('personsTab')?.style.display !== 'none') {
+        loadPersons();
+    }
+    
+    // تحديث عرض الحملات إذا كانت مرئية
+    if (document.getElementById('campaignsTab')?.style.display !== 'none') {
+        loadCampaigns();
+    }
+    
+    // عرض تنبيه
+    showTemporaryAlert('أنت الآن تسبح تسبيحاً عاماً', 'info');
+    
+    // تحديث العنوان
+    document.getElementById('pageTitle').textContent = 'تسبيح';
+}
+
+function loadLocalData() {
+    console.log("💾 جاري تحميل البيانات المحلية...");
+    
+    // تحميل الأشخاص
+    persons = JSON.parse(localStorage.getItem('persons')) || [];
+    console.log(`👥 تم تحميل ${persons.length} شخص`);
+    
+    // تحميل الشخص النشط السابق
+    try {
+        const savedActivePerson = localStorage.getItem('active_person');
+        if (savedActivePerson) {
+            const personData = JSON.parse(savedActivePerson);
+            activePersonId = personData.id;
+            console.log(`🎯 تم تحميل الشخص النشط: ${personData.name}`);
+        }
+    } catch (e) {
+        console.warn("⚠️ خطأ في تحميل الشخص النشط:", e);
+    }
+    
+    // تحميل الحملة النشطة السابقة
+    try {
+        const savedActiveCampaign = localStorage.getItem('active_campaign');
+        if (savedActiveCampaign) {
+            const campaignData = JSON.parse(savedActiveCampaign);
+            activeCampaignId = campaignData.id;
+            console.log(`🎯 تم تحميل الحملة النشطة: ${campaignData.title}`);
+        }
+    } catch (e) {
+        console.warn("⚠️ خطأ في تحميل الحملة النشطة:", e);
+    }
+    
+    // تحميل باقي البيانات...
+}
+        async function initializeLocalStats() {
+    console.log("📊 جاري تهيئة الإحصائيات...");
+    
+    const today = new Date().toDateString();
+    const weekStart = getWeekStartDate();
+    
+    // تحميل الإحصائيات
+    let stats = JSON.parse(localStorage.getItem('praise_stats')) || {
+        total: 0,
+        today: 0,
+        todayDate: today,
+        week: 0,
+        weekStart: weekStart,
+        streaks: 0,
+        lastPraiseDate: null,
+        sessionCount: 0 // <-- إضافة عداد الجلسة
+    };
+    
+    // تحقق من تغيير اليوم
+    if (stats.todayDate !== today) {
+        console.log("📅 يوم جديد، إعادة ضبط إحصائيات اليوم");
+        
+        // إعادة ضبط اليوم
+        stats.today = 0;
+        stats.todayDate = today;
+        
+        // الحفاظ على sessionCount للجلسة الحالية
+        // لا نعيد تعيينه لأنه خاص بالجلسة الحالية فقط
+    }
+    
+    // تحقق من تغيير الأسبوع
+    if (stats.weekStart !== weekStart) {
+        console.log("📆 أسبوع جديد، إعادة ضبط إحصائيات الأسبوع");
+        stats.week = 0;
+        stats.weekStart = weekStart;
+    }
+    
+    // تعيين المتغيرات العالمية - تصحيح الخطأ هنا
+    totalCount = stats.total || 0;
+    todayCount = stats.today || 0;
+    localCount = stats.sessionCount || 0; // <-- استعادة عداد الجلسة
+    
+    
+    // حفظ الإحصائيات المحدثة
+    localStorage.setItem('praise_stats', JSON.stringify(stats));
+    
+    return stats;
+}
+
+        // 2. عند تشغيل الصفحة
+        window.onload = () => {
+            initWebSocket();
+            setupNewUser();
+            // تحميل الاسم المحفوظ
+            const savedName = localStorage.getItem('user_name');
+            if(savedName) {
+                const input = document.getElementById('userNameInput');
+                if(input) input.value = savedName;
+            }
+            setTimeout(() => {
+            updateActiveDisplay();
+            }, 300);
+            // تحميل الإحصائيات المحلية
+            loadLocalStats();
+            initializeLocalStats();
+            updateMainDisplay();
+            // تحديث العداد الرئيسي
+            document.getElementById('mainCounter').innerText = localCount;
+            document.getElementById('totalPraise').innerText = totalCount;
+            document.getElementById('todayPraise').innerText = todayCount;
+            loadLocalData();
+            // إذا كان هناك شخص نشط من جلسة سابقة
+            const savedActivePerson = localStorage.getItem('active_person');
+            if(savedActivePerson) {
+                const person = JSON.parse(savedActivePerson);
+                setActivePerson(person.id, person.name);
+            }
+            userId = localStorage.getItem('user_id') || generateUserId();
+            localStorage.setItem('user_id', userId);
+             setupEventListeners();
+        };
+
+        // 3. وظائف التنقل (Tabs والصفحات)
+        function switchPage(pageId, title, btn) {
+            console.log("الانتقال إلى:", pageId);
+            
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+            // إظهار الصفحة المطلوبة
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) targetPage.classList.add('active');
+            
+            // تحديث العنوان
+            document.getElementById('pageTitle').innerText = title;
+            
+            // تحديث شكل أزرار القائمة السفلية
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            // إذا كانت صفحة الحملات، ابدأ الجلب فوراً
+            if(pageId === 'communityPage') {
+                loadCampaigns();
+                loadPersons();
+            }
+        }
+
+        function switchTab(tabId, btn) {
+            // تحديث أزرار التبويب
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // إخفاء جميع المحتويات
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            
+            // إظهار المحتوى المطلوب
+            document.getElementById(tabId).style.display = 'block';
+        }
+        async function sendCampaignPraise(campaignId) {
+    console.log(`📤 إرسال تسبيح للحملة ${campaignId}`);
+    
+    // 1. محاولة الإرسال للخادم عبر REST API
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/community/pray/${campaignId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log("✅ تمت الزيادة في الخادم:", result);
+            
+            // 2. إرسال إشعار للجميع عبر WebSocket
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    "type": "PRAISE_CLICK",
+                    "campaign_id": campaignId,
+                    "amount": 1,
+                    "user_id": userId,
+                    "user_name": localStorage.getItem('user_name') || "مستخدم"
+                }));
+            }
+            
+            // 3. تحديث الحملة في الواجهة
+            updateCampaignCounter(campaignId, 1);
+            
+            return true;
+        } else {
+            console.warn("⚠️ فشل إرسال التسبيح للخادم");
+            saveCampaignPraiseToOffline(campaignId);
+            return false;
+        }
+    } catch (error) {
+        console.error("❌ خطأ في الاتصال بالخادم:", error);
+        saveCampaignPraiseToOffline(campaignId);
+        return false;
+    }
+}
+        // 4. وظيفة التسبيح والمزامنة
+        // تعديل دالة doPraise لإضافة حفظ إحصائيات الأشخاص
+function doPraise(event) {
+    // منع الريفريش في الهاتف والكمبيوتر
+    if (event) {
+        if (event.cancelable) event.preventDefault();
+        event.stopPropagation();
+    }
+    if (activeCampaignId) {
+        const activeCard = document.querySelector(`[data-campaign-id="${activeCampaignId}"]`);
+        if (activeCard) {
+            const current = parseInt(activeCard.querySelector('.current-count').innerText);
+            const target = parseInt(activeCard.dataset.target);
+            if (current >= target) {
+                alert("تم تحقيق هدف هذه الحملة بالفعل، جاري التحويل للتسبيح العام.");
+                resetToGeneralPraise();
+                return;
+            }
+        }
+    }
+
+    // 1. تحديث الإحصائيات المحلية فوراً
+    localCount++;
+    todayCount++;
+    totalCount++;
+    
+    // حفظ محلي (تأكد من تعريف الدالة لديك)
+    saveLocalStats(); 
+
+    // 2. تحديث الواجهة فوراً
+    const mainCtr = document.getElementById('mainCounter');
+    const todayCtr = document.getElementById('todayPraise');
+    const totalCtr = document.getElementById('totalPraise');
+    
+    if(mainCtr) mainCtr.innerText = localCount;
+    if(todayCtr) todayCtr.innerText = todayCount;
+    if(totalCtr) totalCtr.innerText = totalCount;
+
+    // 3. منطق الرفع للسيرفر (نفس منطقك القديم مع إضافة فحص الإنترنت)
+    if (activePersonId) {
+        savePersonStats(activePersonId);
+        if (typeof sendPersonPraise === "function") {
+            sendPersonPraise(activePersonId);
+        }
+    } 
+    else if (activeCampaignId) {
+        if (typeof sendCampaignPraise === "function") {
+            sendCampaignPraise(activeCampaignId);
+        }
+    }
+
+    // تأثير بصري للزر لمنع الاحساس بالتعليق في الهاتف
+    const btn = event ? event.currentTarget : document.querySelector('.counter-btn');
+    if (btn) {
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => btn.style.transform = 'scale(1)', 100);
+    }
+
+    return false;
+}
+
+
+
+// دالة لحفظ إحصائيات الشخص
+function savePersonStats(personId) {
+    
+    // تحميل إحصائيات الحملات الحالية
+    let campaignStats = JSON.parse(localStorage.getItem('campaign_stats')) || {};
+    
+    // إذا لم تكن هناك إحصائيات لهذا الشخص، قم بإنشائها
+    if (!campaignStats[personId]) {
+        campaignStats[personId] = {
+            count: 0,
+            firstPraiseDate: new Date().toISOString(),
+            lastPraiseDate: new Date().toISOString(),
+            daily: {}
+        };
+    }
+    
+    // زيادة العداد
+    campaignStats[personId].count++;
+    campaignStats[personId].lastPraiseDate = new Date().toISOString();
+    
+    // زيادة العداد اليومي
+    const today = new Date().toDateString();
+    if (!campaignStats[personId].daily[today]) {
+        campaignStats[personId].daily[today] = 0;
+    }
+    campaignStats[personId].daily[today]++;
+    
+    // حفظ في localStorage
+    localStorage.setItem('campaign_stats', JSON.stringify(campaignStats));
+    
+    // تحديث عرض الشخص في قائمة الأشخاص
+    updatePersonDisplay(personId, campaignStats[personId].count);
+    
+}
+
+// دالة لتحديث عرض الشخص في القائمة
+function updatePersonDisplay(personId, count) {
+    const personElement = document.querySelector(`[data-person-id="${personId}"]`);
+    if (personElement) {
+        // تحديث العداد
+        const countSpan = personElement.querySelector('.person-stats span:first-child');
+        if (countSpan) {
+            countSpan.textContent = `ساهمت بـ: ${count}`;
+        }
+        
+        // تحديث شريط التقدم
+        const targetSpan = personElement.querySelector('.person-stats span:nth-child(2)');
+        if (targetSpan) {
+            const targetText = targetSpan.textContent;
+            const target = parseInt(targetText.replace('الهدف: ', ''));
+            const progress = (count / target) * 100;
+            
+            const progressBar = personElement.querySelector('.progress-fill');
+            if (progressBar) {
+                progressBar.style.width = `${Math.min(progress, 100)}%`;
+            }
+            
+            // تحديث النسبة المئوية
+            const percentSpan = personElement.querySelector('.person-stats span:nth-child(3)');
+            if (percentSpan) {
+                percentSpan.textContent = `النسبة: ${Math.min(progress, 100).toFixed(1)}%`;
+            }
+        }
+    }
+}
+
+// دالة لإرسال تسبيح للشخص
+function sendPersonPraise(personId) {
+    // هنا يمكنك إرسال البيانات للخادم إذا كان يدعم حفظ إحصائيات الأشخاص
+    console.log(`📤 إرسال تسبيح للشخص ${personId}`);
+    
+    // تخزين مؤقت للإرسال لاحقاً
+    saveToOfflineQueue(personId, 'person');
+}
+
+// ========== تعديل دالة loadPersons لعرض الإحصائيات ==========
+function loadPersons() {
+    const container = document.getElementById('personsContainer');
+    if (!container) return;
+    
+    console.log("جاري تحميل الأشخاص مع إحصائياتهم...");
+    
+    // تحميل الأشخاص
+    persons = JSON.parse(localStorage.getItem('persons')) || [];
+    
+    // تحميل إحصائيات الأشخاص
+    const campaignStats = JSON.parse(localStorage.getItem('campaign_stats')) || {};
+    
+    if (persons.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h3>لا توجد أشخاص مضافة</h3>
+                <p>أضف أشخاصاً لتسبح لهم وتحصل على الأجر أنت وهم</p>
+                <button class="btn-action" onclick="openModal('addPersonModal')">إضافة أول شخص</button>
+            </div>`;
+        return;
+    }
+    
+    // فرز الأشخاص حسب آخر تسبيح
+    persons.sort((a, b) => {
+        const statsA = campaignStats[a.id] || { lastPraiseDate: '0' };
+        const statsB = campaignStats[b.id] || { lastPraiseDate: '0' };
+        return new Date(statsB.lastPraiseDate) - new Date(statsA.lastPraiseDate);
+    });
+    
+    let personsHTML = '';
+    
+    persons.forEach(person => {
+        const personStats = campaignStats[person.id] || { count: 0 };
+        const progress = person.target > 0 ? (personStats.count / person.target) * 100 : 0;
+        const isActive = activePersonId === person.id;
+        
+        personsHTML += `
+        <div class="card person-card ${isActive ? 'active-person' : ''}" 
+             style="${isActive ? 'background:#f0f9f0;' : ''}"
+             data-person-id="${person.id}">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <h3 class="person-name">${person.name}</h3>
+                <span class="category-tag">${person.category}</span>
+            </div>
+            
+            ${person.description ? `<p style="font-size:0.9em; color:#555; margin:5px 0;">${person.description}</p>` : ''}
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${Math.min(progress, 100)}%"></div>
+            </div>
+            
+            <div class="person-stats">
+                <span>ساهمت بـ: <strong>${personStats.count || 0}</strong></span>
+                <span>الهدف: ${person.target}</span>
+                <span>النسبة: ${Math.min(progress, 100).toFixed(1)}%</span>
+            </div>
+            
+            ${personStats.lastPraiseDate ? `
+                <div style="margin-top:5px; font-size:0.85em; color:#666;">
+                    <i class="fas fa-clock"></i> آخر تسبيح: ${formatRelativeTime(personStats.lastPraiseDate)}
+                </div>
+            ` : ''}
+            
+            <div style="display:flex; gap:5px; margin-top:10px;">
+                <button class="btn-pray-for" onclick="setActivePerson(${person.id}, '${escapeString(person.name)}')">
+                    ${isActive ? '<i class="fas fa-check"></i> نشط' : '<i class="fas fa-hands-praying"></i> تسبح له'}
+                </button>
+                <button class="btn-delete" onclick="deletePerson(${person.id})">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+            </div>
+            
+            ${personStats.count > 0 ? `
+                <div style="margin-top:10px; padding:8px; background:#f8f9fa; border-radius:8px; font-size:0.85em;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>التسبيحات اليوم: ${getTodayPraisesForPerson(person.id)}</span>
+                        <span>الأسبوع: ${getWeekPraisesForPerson(person.id)}</span>
+                    </div>
+                </div>
+            ` : ''}
+        </div>`;
+    });
+    
+    container.innerHTML = personsHTML;
+}
+
+// دالة مساعدة للحصول على تسبيحات اليوم للشخص
+function getTodayPraisesForPerson(personId) {
+    const campaignStats = JSON.parse(localStorage.getItem('campaign_stats')) || {};
+    const personStats = campaignStats[personId];
+    
+    if (!personStats || !personStats.daily) return 0;
+    
+    const today = new Date().toDateString();
+    return personStats.daily[today] || 0;
+}
+
+// دالة مساعدة للحصول على تسبيحات الأسبوع للشخص
+function getWeekPraisesForPerson(personId) {
+    const campaignStats = JSON.parse(localStorage.getItem('campaign_stats')) || {};
+    const personStats = campaignStats[personId];
+    
+    if (!personStats || !personStats.daily) return 0;
+    
+    const weekStart = getWeekStartDate();
+    let weekCount = 0;
+    
+    Object.keys(personStats.daily).forEach(date => {
+        if (date >= weekStart) {
+            weekCount += personStats.daily[date];
+        }
+    });
+    
+    return weekCount;
+}
+
+// دالة مساعدة لتنسيق الوقت النسبي
+function formatRelativeTime(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMins < 1) return 'الآن';
+    if (diffMins < 60) return `قبل ${diffMins} دقيقة`;
+    if (diffHours < 24) return `قبل ${diffHours} ساعة`;
+    if (diffDays === 1) return 'أمس';
+    if (diffDays < 7) return `قبل ${diffDays} أيام`;
+    return `قبل ${Math.floor(diffDays / 7)} أسابيع`;
+}
+// دالة إرسال التسبيح للخادم
+async function sendPraiseToServer(prayerId) {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/community/pray/${prayerId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log("تمت الزيادة في الخادم:", result);
+            
+            // 6. إرسال إشعار للجميع عبر WebSocket
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    "type": "PRAISE_CLICK",
+                    "campaign_id": prayerId, // campaign_id متوقع في WebSocket
+                    "amount": 1
+                }));
+            }
+            
+            offlineBuffer = 0;
+            
+            // 7. تحديث إحصائيات الحملات
+            updateCampaignStatistics(prayerId);
+            
+        } else {
+            console.warn("فشل إرسال التسبيح للخادم");
+            // حفظ في المخزن للإرسال لاحقاً
+            saveToOfflineQueue(prayerId);
+        }
+    } catch (error) {
+        console.error("خطأ في الاتصال بالخادم:", error);
+        saveToOfflineQueue(prayerId);
+    }
+}
+
+// دالة لتحديث إحصائيات الحملات المحلية
+function updateCampaignStatistics(prayerId) {
+    let campaignStats = JSON.parse(localStorage.getItem('campaign_stats')) || {};
+    
+    if (!campaignStats[prayerId]) {
+        campaignStats[prayerId] = {
+            count: 0,
+            firstDate: new Date().toISOString(),
+            lastDate: new Date().toISOString()
+        };
+    }
+    
+    campaignStats[prayerId].count++;
+    campaignStats[prayerId].lastDate = new Date().toISOString();
+    
+    // زيادة إحصائية اليوم للحملة
+    const today = new Date().toDateString();
+    if (!campaignStats[prayerId].daily) {
+        campaignStats[prayerId].daily = {};
+    }
+    
+    if (!campaignStats[prayerId].daily[today]) {
+        campaignStats[prayerId].daily[today] = 0;
+    }
+    campaignStats[prayerId].daily[today]++;
+    
+    localStorage.setItem('campaign_stats', JSON.stringify(campaignStats));
+    
+    // تحديث عرض الحملة في الصفحة
+    updateCampaignDisplay(prayerId, campaignStats[prayerId].count);
+}
+
+// دالة تحديث إحصائيات الحملة في الواجهة
+function updateCampaignDisplay(prayerId, count) {
+    const badge = document.querySelector(`[data-prayer-id="${prayerId}"] .campaign-badge`);
+    if (badge) {
+        badge.textContent = `ساهمتَ بـ ${count} تسبيحة`;
+        badge.style.display = 'inline-block';
+    }
+}
+
+// دالة حفظ الإحصائيات المحلية (محدثة)
+function saveLocalStats() {
+    const stats = JSON.parse(localStorage.getItem('praise_stats')) || {
+        total: 0,
+        today: 0,
+        todayDate: new Date().toDateString(),
+        week: 0,
+        weekStart: getWeekStartDate(),  
+        streaks: 0,
+        lastPraiseDate: null,
+        sessionCount: 0 // <-- إضافة
+    };
+    
+    // تحديث الإحصائيات
+    stats.total = totalCount;
+    stats.today = todayCount;
+    stats.sessionCount = localCount; // <-- حفظ عداد الجلسة
+    stats.todayDate = new Date().toDateString();
+    stats.week = (stats.week || 0) + 1;
+    stats.lastPraiseDate = new Date().toISOString();
+    
+    localStorage.setItem('praise_stats', JSON.stringify(stats));
+}
+
+// دالة تحديث عرض الإحصائيات
+function updateStatsDisplay() {
+    const stats = JSON.parse(localStorage.getItem('praise_stats')) || {};
+    
+    document.getElementById('statTotal').textContent = stats.total || 0;
+    document.getElementById('statWeek').textContent = stats.week || 0;
+    document.getElementById('statPersons').textContent = persons ? persons.length : 0;
+    
+    // تحديث عداد المتابعة إذا كان موجوداً
+    const streakElement = document.getElementById('statStreak');
+    if (streakElement) {
+        streakElement.textContent = stats.streaks || 0;
+    }
+}
+
+// دالة للحفظ في قائمة الانتظار عند انقطاع الإنترنت
+function saveToOfflineQueue(prayerId) {
+    let offlineQueue = JSON.parse(localStorage.getItem('offline_praises')) || [];
+    
+    offlineQueue.push({
+        prayer_id: prayerId,
+        timestamp: new Date().toISOString()
+    });
+    
+    localStorage.setItem('offline_praises', JSON.stringify(offlineQueue));
+    
+    // عرض تنبيه للمستخدم
+    showOfflineNotification();
+}
+
+// دالة لعرض تنبيه انقطاع الإنترنت
+function showOfflineNotification() {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        background: #ff9800;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    notification.innerHTML = `
+        <i class="fas fa-wifi-slash"></i>
+        تم حفظ التسبيح محلياً وسيتم إرساله عند عودة الاتصال
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.5s';
+        setTimeout(() => notification.remove(), 500);
+    }, 3000);
+}
+
+// دالة لمزامنة التسبيحات المحفوظة عند عودة الإنترنت
+async function syncOfflinePraises() {
+    const offlineQueue = JSON.parse(localStorage.getItem('offline_praises')) || [];
+    if (offlineQueue.length === 0) return;
+    
+    console.log(`جاري مزامنة ${offlineQueue.length} تسبيح محفوظ...`);
+    
+    let successful = 0;
+    for (const praise of offlineQueue) {
+        try {
+            const response = await fetch(`${BASE_URL}/api/v1/community/pray/${praise.prayer_id}`, {
+                method: 'POST'
+            });
+            
+            if (response.ok) {
+                successful++;
+                
+                // إرسال إشعار WebSocket بعد النجاح
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({
+                        "type": "PRAISE_CLICK",
+                        "campaign_id": praise.prayer_id,
+                        "amount": 1
+                    }));
+                }
+            }
+        } catch (error) {
+            console.error(`فشل مزامنة تسبيح:`, error);
+        }
+    }
+    
+    // عرض نتيجة المزامنة
+    if (successful > 0) {
+        showSyncNotification(successful);
+        
+        // حذف التسبيحات التي تمت مزامنتها بنجاح
+        localStorage.removeItem('offline_praises');
+    }
+}
+
+// دالة لعرض تنبيه المزامنة الناجحة
+function showSyncNotification(count) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        background: var(--sage-green);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        تمت مزامنة ${count} تسبيح بنجاح!
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.5s';
+        setTimeout(() => notification.remove(), 500);
+    }, 3000);
+}
+
+// في initWebSocket، أضف استدعاء المزامنة عند الاتصال:
+// socket.onopen = () => {
+//     console.log("متصل بنظام الاستغاثة الحي");
+    
+//     // مزامنة التسبيحات المحفوظة فوراً
+//     syncOfflinePraises();
+// };
+
+// استمع لحدث عودة الإنترنت
+window.addEventListener('online', () => {
+    console.log("عاد الاتصال بالإنترنت");
+    syncOfflinePraises();
+});
+// دالة جديدة لإرسال التسبيح إلى الخادم
+async function sendPraiseToServer(prayerId, amount) {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/community/pray/${prayerId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log("تمت الدعوة بنجاح:", result);
+            
+            // تحديث العداد الظاهر للحملة إذا كنا في صفحة الحملات
+            updateCampaignCounter(prayerId, result.new_count);
+        } else {
+            console.warn("فشل إرسال التسبيح");
+            // حفظ في المخزن للإرسال لاحقاً
+            saveToOfflineQueue(prayerId, amount);
+        }
+    } catch (error) {
+        console.error("خطأ في الاتصال:", error);
+        saveToOfflineQueue(prayerId, amount);
+    }
+}
+
+// دالة لتحديث عداد الحملة في الواجهة
+function updateCampaignCounter(campaignId, newCount) {
+    const card = document.querySelector(`[data-campaign-id="${campaignId}"]`);
+    if (!card) return;
+
+    // 1. تحديث الأرقام والواجهة
+    const currentSpan = card.querySelector('.current-count');
+    if (currentSpan) currentSpan.innerText = newCount;
+
+    const target = parseInt(card.dataset.target) || 1;
+    const progress = (newCount / target) * 100;
+    
+    const fill = card.querySelector('.progress-fill');
+    if (fill) {
+        fill.style.width = Math.min(progress, 100) + '%';
+        if (progress >= 100) fill.style.background = '#27ae60';
+    }
+
+    // 2. التحقق مما إذا اكتمل الهدف الآن
+    if (progress >= 100) {
+        const actionArea = card.querySelector('.action-area') || card.querySelector('.action-container');
+        
+        // استبدال الزر برسالة "تم تحقيق الهدف"
+        if (actionArea && !actionArea.querySelector('.achieved-msg')) {
+            actionArea.innerHTML = `
+                <div class="achieved-msg" style="background:#27ae60; color:white; padding:10px; border-radius:10px; text-align:center; font-weight:bold; animation: pulse 2s infinite;">
+                    ✅ تم تحقيق الهدف بحمد الله
+                </div>`;
+        }
+
+        // 3. الجزء الأهم: إذا كان المستخدم يسبح حالياً لهذه الحملة
+        if (activeCampaignId == campaignId) {
+            // إظهار رسالة تنبيه واضحة
+            alert(`الحمد لله، تم تحقيق هدف حملة "${card.querySelector('.person-name').innerText}". سيتم تحويلك الآن للتسبيح العام.`);
+            
+            // استدعاء دالة العودة للتسبيح العام
+            resetToGeneralPraise();
+        }
+    }
+}
+
+function resetToGeneralPraise() {
+    // إفراغ معرفات الحملة النشطة
+    activeCampaignId = null;
+    activePersonId = null;
+    
+    // حذفها من الذاكرة المحلية حتى لا تعود عند تحديث الصفحة
+    localStorage.removeItem('active_campaign');
+    localStorage.removeItem('active_person');
+    
+    // تحديث النصوص في واجهة التسبيح (مثلاً: تغيير "أنت تسبح لـ...")
+    const activeText = document.getElementById('activeTargetText'); // تأكد من وجود هذا الـ ID في الـ HTML لديك
+    if (activeText) {
+        activeText.innerText = "تسبيح عام";
+    }
+    
+    // تحديث أي واجهات أخرى مرتبطة
+    updateActiveDisplay(); 
+    
+    console.log("تمت العودة للتسبيح العام لاكتمال الحملة.");
+}
+
+// دالة لحفظ التسبيحات أثناء عدم الاتصال
+function saveToOfflineQueue(prayerId, amount) {
+    // احفظ في localStorage للإرسال لاحقاً
+    let offlineQueue = JSON.parse(localStorage.getItem('offline_praises')) || [];
+    offlineQueue.push({
+        prayer_id: prayerId,
+        amount: amount,
+        timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('offline_praises', JSON.stringify(offlineQueue));
+    console.log("تم حفظ التسبيح للإرسال لاحقاً");
+}
+
+// دالة لمزامنة التسبيحات المحفوظة عند عودة الإنترنت
+async function syncOfflinePraises() {
+    const offlineQueue = JSON.parse(localStorage.getItem('offline_praises')) || [];
+    if (offlineQueue.length === 0) return;
+    
+    console.log(`جاري مزامنة ${offlineQueue.length} تسبيح محفوظ...`);
+    
+    for (const praise of offlineQueue) {
+        try {
+            await fetch(`${BASE_URL}/api/v1/community/pray/${praise.prayer_id}`, {
+                method: 'POST'
+            });
+            console.log(`تم مزامنة تسبيح لـ ${praise.prayer_id}`);
+        } catch (error) {
+            console.error(`فشل مزامنة تسبيح لـ ${praise.prayer_id}:`, error);
+            break; // توقف إذا فشل الاتصال
+        }
+    }
+    
+    // احذف التسبيحات التي تمت مزامنتها بنجاح
+    localStorage.removeItem('offline_praises');
+}
+        // 5. إدارة الأشخاص
+        // let persons = JSON.parse(localStorage.getItem('persons')) || [];
+
+        // تعديل دالة loadPersons بشكل كامل
+function loadPersons() {
+        persons = JSON.parse(localStorage.getItem('persons')) || [];
+    const container = document.getElementById('personsContainer');
+    if (!container) return;
+    
+    console.log("جاري تحميل الأشخاص...");
+    
+    // تحميل الأشخاص من localStorage
+    
+    // إذا لم يكن هناك أشخاص
+    if (persons.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h3>لا توجد أشخاص مضافة</h3>
+                <p>أضف أشخاصاً لتسبح لهم وتحصل على الأجر أنت وهم</p>
+                <button class="btn-action" onclick="openModal('addPersonModal')">إضافة أول شخص</button>
+            </div>`;
+        return;
+    }
+    
+    // فرز الأشخاص حسب تاريخ الإضافة (الأحدث أولاً)
+    persons.sort((a, b) => {
+        const dateA = new Date(a.created || a.timestamp || 0);
+        const dateB = new Date(b.created || b.timestamp || 0);
+        return dateB - dateA;
+    });
+    
+    // إنشاء HTML للأشخاص
+    let personsHTML = '';
+    
+    persons.forEach(person => {
+        // تحميل إحصائيات الحملة لهذا الشخص
+        const campaignStats = JSON.parse(localStorage.getItem('campaign_stats')) || {};
+        const personStats = campaignStats[person.id] || { count: 0 };
+        
+        const progress = personStats.count ? (personStats.count / person.target) * 100 : 0;
+        const isActive = activePersonId === person.id;
+        
+        personsHTML += `
+        <div class="card person-card ${isActive ? 'active-person' : ''}" 
+             style="${isActive ? 'background:#f0f9f0;' : ''}"
+             data-person-id="${person.id}">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <h3 class="person-name">${person.name}</h3>
+                <span class="category-tag">${person.category}</span>
+            </div>
+            
+            ${person.description ? `<p style="font-size:0.9em; color:#555; margin:5px 0;">${person.description}</p>` : ''}
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            
+            <div class="person-stats">
+                <span>ساهمت بـ: ${personStats.count || 0}</span>
+                <span>الهدف: ${person.target}</span>
+                <span>النسبة: ${Math.min(progress, 100).toFixed(1)}%</span>
+            </div>
+            
+            <div style="margin-top:5px; font-size:0.85em; color:#666;">
+                <i class="fas fa-calendar"></i> أضيف في: ${formatDate(person.created || person.timestamp)}
+            </div>
+            
+            <div style="display:flex; gap:5px; margin-top:10px;">
+                <button class="btn-pray-for" onclick="setActivePerson(${person.id}, '${escapeString(person.name)}')">
+                    ${isActive ? '<i class="fas fa-check"></i> نشط' : '<i class="fas fa-hands-praying"></i> تسبح له'}
+                </button>
+                <button class="btn-delete" onclick="deletePerson(${person.id})">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+            </div>
+        </div>`;
+    });
+    
+    container.innerHTML = personsHTML;
+}
+
+// دالة مساعدة لتنسيق التاريخ
+function formatDate(dateString) {
+    if (!dateString) return 'تاريخ غير معروف';
+    
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ar-SA', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    } catch (e) {
+        return 'تاريخ غير معروف';
+    }
+}
+
+// دالة مساعدة للهروب من النصوص
+function escapeString(str) {
+    return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+// تعديل دالة setActivePerson
+function setActivePerson(id, name) {
+    activePersonId = id;
+    activeCampaignId = null; // إلغاء الحملة النشطة إذا كانت موجودة
+    
+    // حفظ الشخص النشط
+    localStorage.setItem('active_person', JSON.stringify({id, name}));
+    
+    // عرض البادج
+    const badge = document.getElementById('activePersonBadge');
+    if (badge) {
+        badge.style.display = 'block';
+        document.getElementById('activePersonName').innerText = name;
+    }
+    
+    // تغيير لون زر التسبيح
+    const counterBtn = document.querySelector('.counter-btn');
+    if (counterBtn) {
+        counterBtn.style.borderColor = 'var(--light-blue)';
+    }
+    
+    // تحديث عرض الأشخاص
+    loadPersons();
+    
+    // إذا كنا في صفحة الحملات، انتقل لصفحة التسبيح
+    if (document.getElementById('communityPage').classList.contains('active')) {
+        switchPage('praisePage', `تسبيح لـ: ${name}`, document.getElementById('praiseBtn'));
+    }
+    
+    // عرض تنبيه
+    showTemporaryAlert(`أنت الآن تسبح لـ: ${name}`, 'success');
+}
+
+// دالة لعرض تنبيه مؤقت
+function showTemporaryAlert(message, type = 'info') {
+    const colors = {
+        success: 'var(--sage-green)',
+        info: 'var(--light-blue)',
+        warning: 'orange',
+        error: '#e74c3c'
+    };
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: ${colors[type] || colors.info};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease;
+    `;
+    
+    alertDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+        ${message}
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.style.opacity = '0';
+        alertDiv.style.transition = 'opacity 0.5s';
+        setTimeout(() => alertDiv.remove(), 500);
+    }, 3000);
+}
+
+// إضافة أنميشن للتنبيه
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// تعديل دالة switchTab لتحميل الأشخاص عند التبديل
+function switchTab(tabId, btn) {
+    // تحديث أزرار التبويب
+    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    
+    // إخفاء جميع المحتويات
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    
+    // إظهار المحتوى المطلوب
+    const targetTab = document.getElementById(tabId);
+    if (targetTab) {
+        targetTab.style.display = 'block';
+        
+        // إذا كانت تبويب الأشخاص، قم بتحميلهم
+        if (tabId === 'personsTab') {
+            setTimeout(() => {
+                loadPersons();
+            }, 100); // تأخير بسيط لضمان عرض التبويب أولاً
+        }
+    }
+}
+
+        function addNewPerson() {
+            const name = document.getElementById('personName').value;
+            const desc = document.getElementById('personDesc').value;
+            const category = document.getElementById('personCategory').value;
+            const target = parseInt(document.getElementById('personTarget').value) || 1000;
+            
+            if (!name) {
+                alert("يرجى كتابة اسم الشخص");
+                return;
+            }
+            
+            const newPerson = {
+                id: Date.now(),
+                name: name,
+                description: desc,
+                category: category,
+                target: target,
+                current: 0,
+                created: new Date().toISOString(),
+                userId: userId
+            };
+            
+            persons.push(newPerson);
+            localStorage.setItem('persons', JSON.stringify(persons));
+            
+            // إغلاق المودال وتحديث العرض
+            history.back();
+            loadPersons();
+            
+            // إذا كان في صفحة الأشخاص، انتقل إليها
+            if (document.getElementById('communityPage').classList.contains('active')) {
+                switchTab('personsTab', document.querySelector('#personsTab').previousElementSibling);
+            }
+            
+            alert(`تم إضافة ${name} بنجاح! يمكنك الآن التسبيح له.`);
+            
+            // تفريغ الحقول
+            document.getElementById('personName').value = '';
+            document.getElementById('personDesc').value = '';
+        }
+
+        function setActivePerson(id, name) {
+            activePersonId = id;
+            activeCampaignId = null; // إلغاء الحملة النشطة إذا كانت موجودة
+            
+            // حفظ الشخص النشط
+            localStorage.setItem('active_person', JSON.stringify({id, name}));
+            
+            // عرض البادج
+            const badge = document.getElementById('activePersonBadge');
+            badge.style.display = 'block';
+            document.getElementById('activePersonName').innerText = name;
+            
+            // تغيير لون زر التسبيح
+            document.querySelector('.counter-btn').style.borderColor = 'var(--light-blue)';
+            
+            // تحديث عرض الأشخاص
+            loadPersons();
+            
+            // العودة لصفحة التسبيح
+            switchPage('praisePage', `تسبيح لـ: ${name}`, document.getElementById('praiseBtn'));
+            
+            alert(`أنت الآن تسبح لـ: ${name}. كل نقرة ستُضاف له بإذن الله.`);
+        }
+
+        function clearActivePerson() {
+            activePersonId = null;
+            localStorage.removeItem('active_person');
+            
+            // إخفاء البادج
+            document.getElementById('activePersonBadge').style.display = 'none';
+            
+            // إعادة لون زر التسبيح
+            document.querySelector('.counter-btn').style.borderColor = 'var(--sage-green)';
+            
+            // تحديث عرض الأشخاص
+            loadPersons();
+        }
+
+        function deletePerson(id) {
+            if (!confirm("هل أنت متأكد من حذف هذا الشخص؟")) return;
+            
+            persons = persons.filter(p => p.id !== id);
+            localStorage.setItem('persons', JSON.stringify(persons));
+            
+            // إذا كان الشخص المحذوف هو النشط، قم بإلغاء النشاط
+            if (activePersonId === id) {
+                clearActivePerson();
+            }
+            
+            loadPersons();
+        }
+
+        // 6. الحملات الجماعية (من النسخة الأصلية)
+        async function loadCampaigns() {
+    const container = document.getElementById('campaignsContainer');
+    if (!container) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/community/campaigns`);
+        if (!response.ok) throw new Error('فشل جلب الحملات');
+        
+        const campaigns = await response.json();
+        
+        if (campaigns.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#999; padding:20px;">لا توجد حملات نشطة حالياً</p>';
+            return;
+        }
+
+        let campaignsHTML = '';
+        campaigns.forEach(campaign => {
+            const current = campaign.current_count || 0;
+            const target = campaign.target_count || 1; // تجنب القسمة على صفر
+            const progress = (current / target) * 100;
+            const isActive = activeCampaignId === campaign.id;
+
+            // تحديد ما سيظهر في مكان الزر
+            let actionAreaHTML = '';
+            if (progress >= 100) {
+                // حالة اكتمال الهدف
+                actionAreaHTML = `
+                    <div class="target-achieved-msg" style="background: #27ae60; color: white; padding: 12px; border-radius: 10px; text-align: center; margin-top: 10px; font-weight: bold; animation: fadeIn 0.5s;">
+                        <i class="fas fa-check-circle"></i> تم تحقيق الهدف بحمد الله
+                    </div>`;
+            } else {
+                // حالة الحملة لا تزال نشطة
+                actionAreaHTML = `
+                    <button class="btn-contribute" onclick="startContributing(${campaign.id}, '${escapeString(campaign.title)}')" 
+                            style="${isActive ? 'background:var(--sage-green); border:2px solid white;' : ''}">
+                        ${isActive ? '<i class="fas fa-check"></i> جاري المساهمة الآن' : 'ساهم في هذه الحملة'}
+                    </button>`;
+            }
+
+            campaignsHTML += `
+                <div class="card  campaign-card" data-campaign-id="${campaign.id}" data-target="${target}">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 class="person-name">${campaign.title}</h3>
+                        <span class="category-tag">${campaign.creator_name}</span>
+                    </div>
+                    <p style="font-size:0.9em; color:#666; margin:8px 0;">${campaign.description || ''}</p>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.min(progress, 100)}%; background: ${progress >= 100 ? '#27ae60' : 'var(--sage-green)'};"></div>
+                    </div>
+                    
+                    <div class="person-stats">
+                        <span>العدد الحالي: <strong class="current-count">${current}</strong></span>
+                        <span>الهدف: ${target}</span>
+                        <span class="percent-text">${progress >= 100 ? 'مكتمل' : progress.toFixed(1) + '%'}</span>
+                    </div>
+
+                    <div class="action-container">
+                        ${actionAreaHTML}
+                    </div>
+                </div>`;
+        });
+
+        container.innerHTML = campaignsHTML;
+    } catch (error) {
+        console.error("خطأ في تحميل الحملات:", error);
+        container.innerHTML = '<p style="text-align:center; color:red; padding:20px;">عذراً، تعذر تحميل الحملات حالياً</p>';
+    }
+}
+
+        // تعديل دالة startContributing لإزالة الشخص النشط
+function startContributing(campaignId, campaignTitle) {
+    console.log(`🎯 بدء المساهمة في الحملة ${campaignId}: ${campaignTitle}`);
+    
+    // 1. إزالة الشخص النشط إذا كان موجوداً
+    if (activePersonId) {
+        clearActivePerson();
+    }
+    
+    // 2. تعيين الحملة النشطة
+    activeCampaignId = campaignId;
+    
+    // 3. حفظ الحملة النشطة
+    localStorage.setItem('active_campaign', JSON.stringify({
+        id: campaignId,
+        title: campaignTitle
+    }));
+    
+    // 4. تحديث الواجهة
+    updateActiveDisplay();
+    
+    // 5. الانتقال لصفحة التسبيح
+    switchPage('praisePage', `مساهمة في: ${campaignTitle}`, document.getElementById('praiseBtn'));
+    
+    // 6. عرض تنبيه
+    showTemporaryAlert(`أنت الآن تسبح لـ: ${campaignTitle}`, 'info');
+}
+
+// دالة جديدة لإزالة الشخص النشط
+function clearActivePerson() {
+    console.log(`🗑️ إزالة الشخص النشط ${activePersonId}`);
+    
+    // إزالة من localStorage
+    localStorage.removeItem('active_person');
+    
+    // إعادة تعيين المتغير
+    activePersonId = null;
+    
+    // تحديث البادج
+    updateActivePersonBadge();
+    
+    // إعادة لون زر التسبيح
+    const counterBtn = document.querySelector('.counter-btn');
+    if (counterBtn) {
+        counterBtn.style.borderColor = 'var(--sage-green)';
+    }
+    
+    // تحديث عرض الأشخاص
+    loadPersons();
+}
+
+// دالة لتحديث العرض النشط
+function updateActiveDisplay() {
+    const badge = document.getElementById('activePersonBadge');
+    const counterBtn = document.querySelector('.counter-btn');
+    
+    if (activePersonId) {
+        // حالة الشخص النشط
+        const person = persons.find(p => p.id === activePersonId);
+        if (person && badge) {
+            badge.style.display = 'block';
+            document.getElementById('activePersonName').innerText = person.name;
+        }
+        if (counterBtn) {
+            counterBtn.style.borderColor = 'var(--light-blue)';
+        }
+    } else if (activeCampaignId) {
+        // حالة الحملة النشطة
+        if (badge) {
+            badge.style.display = 'none';
+        }
+        if (counterBtn) {
+            counterBtn.style.borderColor = 'var(--sage-green)';
+        }
+    } else {
+        // لا شيء نشط
+        if (badge) {
+            badge.style.display = 'none';
+        }
+        if (counterBtn) {
+            counterBtn.style.borderColor = 'var(--sage-green)';
+        }
+    }
+}
+
+// تعديل دالة setActivePerson لإزالة الحملة النشطة
+function setActivePerson(id, name) {
+    console.log(`👤 تعيين الشخص النشط: ${name} (${id})`);
+    
+    // 1. إزالة الحملة النشطة إذا كانت موجودة
+    if (activeCampaignId) {
+        localStorage.removeItem('active_campaign');
+        activeCampaignId = null;
+    }
+    
+    // 2. تعيين الشخص النشط
+    activePersonId = id;
+    
+    // 3. حفظ في localStorage
+    localStorage.setItem('active_person', JSON.stringify({id, name}));
+    
+    // 4. تحديث الواجهة
+    updateActiveDisplay();
+    
+    // 5. تحديث عرض الأشخاص
+    loadPersons();
+    
+    // 6. إذا كنا في صفحة الحملات، انتقل لصفحة التسبيح
+    if (document.getElementById('communityPage').classList.contains('active')) {
+        switchPage('praisePage', `تسبيح لـ: ${name}`, document.getElementById('praiseBtn'));
+    }
+    
+    // 7. عرض تنبيه
+    showTemporaryAlert(`أنت الآن تسبح لـ: ${name}`, 'success');
+}
+
+// دالة للعودة للتسبيح العام
+function switchToGeneralPraise() {
+    console.log("🔄 العودة للتسبيح العام");
+    
+    // إزالة الشخص النشط
+    if (activePersonId) {
+        clearActivePerson();
+    }
+    
+    // إزالة الحملة النشطة
+    if (activeCampaignId) {
+        localStorage.removeItem('active_campaign');
+        activeCampaignId = null;
+    }
+    
+    // تحديث الواجهة
+    updateActiveDisplay();
+    
+    // عرض تنبيه
+    showTemporaryAlert('أنت الآن تسبح تسبيحاً عاماً', 'info');
+}
+
+// إضافة زر للعودة للتسبيح العام في الواجهة
+// يمكن إضافته في HTML:
+/*
+<div id="activePersonBadge" class="active-person-badge" style="display:none;">
+    <i class="fas fa-user"></i> أنت تسبح لـ: <span id="activePersonName"></span>
+    <button onclick="switchToGeneralPraise()" style="margin-right:10px; background:none; border:none; color:#666; cursor:pointer;">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+*/
+
+// أو إضافته ديناميكياً
+function enhanceActiveBadge() {
+    const badge = document.getElementById('activePersonBadge');
+    if (badge && !badge.querySelector('.close-btn')) {
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-btn';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        closeBtn.style.cssText = `
+            margin-right: 10px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9em;
+        `;
+        closeBtn.onclick = switchToGeneralPraise;
+        
+        badge.insertBefore(closeBtn, badge.firstChild);
+    }
+}
+
+// استدعاء enhanceActiveBadge في window.onload
+window.onload = async () => {
+    // 1. تهيئة الاتصال والبيانات الأساسية
+    initWebSocket();
+    // setupNewUser();
+
+    // 2. تحميل الإحصائيات من الذاكرة المحلية (LocalStorage)
+    // انتظر تحميل البيانات وتحديث المتغيرات العالمية totalCount و todayCount
+    const stats = await initializeLocalStats(); 
+    
+    // 3. تحديث واجهة المستخدم بالقيم المستعادة
+    document.getElementById('mainCounter').innerText = localCount || 0;
+    document.getElementById('totalPraise').innerText = totalCount || 0;
+    document.getElementById('todayPraise').innerText = todayCount || 0;
+
+    // 4. تحميل باقي البيانات (الأشخاص، الاسم، الحالة النشطة)
+    const savedName = localStorage.getItem('user_name');
+    if(savedName) {
+        const input = document.getElementById('userNameInput');
+        if(input) input.value = savedName;
+    }
+    
+    loadLocalData();
+    updateActiveDisplay();
+    
+    // إذا كان هناك شخص نشط محفوظ
+    const savedActivePerson = localStorage.getItem('active_person');
+    if(savedActivePerson) {
+        const person = JSON.parse(savedActivePerson);
+        setActivePerson(person.id, person.name);
+    }
+};
+
+        // 7. نظام WebSocket
+        function initWebSocket() {
+    try {
+        socket = new WebSocket(`${WS_URL}/ws/help`);
+
+        socket.onopen = () => {
+            console.log("متصل بنظام الاستغاثة الحي");
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("رسالة واردة:", data);
+            
+            if(data.type === "HELP_REQUEST") {
+                const currentUserName = localStorage.getItem('user_name');
+                if(data.username !== currentUserName) {
+                    if(confirm(`أخونا ${data.username} يحتاج مساعدة في ${data.count} تسبيحة. هل تعينه؟`)) {
+                        alert("جزاك الله خيراً، تقبل الله منك.");
+                    }
+                }
+            }
+            
+            // استقبال تحديثات الحملات
+            if(data.type === "UPDATE_COUNT") {
+                console.log("تحديث عداد الحملة:", data.campaign_id, "بمقدار:", data.added_amount);
+                
+                // تحديث الواجهة مباشرة
+                updateCampaignCounter(data.campaign_id, data.added_amount);
+                
+                // إذا كانت هذه الحملة هي النشطة حالياً، تحديث العداد الشخصي
+                if (data.campaign_id == activeCampaignId) {
+                    // يمكنك إضافة أي تحديثات إضافية هنا
+                }
+            }
+        };
+
+        socket.onclose = () => {
+            console.log("انقطع اتصال WS، إعادة محاولة بعد 3 ثوانٍ...");
+            setTimeout(initWebSocket, 3000);
+        };
+    } catch (e) {
+        console.error("خطأ في تشغيل WebSocket:", e);
+    }
+}
+
+        function syncOfflineBuffer() {
+            if (offlineBuffer > 0 && socket.readyState === WebSocket.OPEN) {
+                let message = {};
+                
+                if (activePersonId) {
+                    message = {
+                        "type": "PERSON_PRAISE",
+                        "person_id": activePersonId,
+                        "amount": offlineBuffer
+                    };
+                } else if (activeCampaignId) {
+                    message = {
+                        "type": "CAMPAIGN_PRAISE",
+                        "campaign_id": activeCampaignId,
+                        "amount": offlineBuffer
+                    };
+                } else {
+                    message = {
+                        "type": "GENERAL_PRAISE",
+                        "amount": offlineBuffer
+                    };
+                }
+                
+                socket.send(JSON.stringify(message));
+                offlineBuffer = 0;
+                console.log("تمت مزامنة المخزن بنجاح");
+            }
+        }
+
+        // 8. نظام الاستغاثة
+        async function broadcastHelp() {
+            const title = document.getElementById('helpTitle').value;
+            const desc = document.getElementById('helpDesc').value;
+            const target = document.getElementById('helpTarget').value;
+            const name = localStorage.getItem('user_name') || "فاعل خير";
+
+            if (!title || !target) {
+                alert("يرجى كتابة العنوان والعدد المطلوب");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/v1/community/request-duaa`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title,
+                        description: desc,
+                        target_count: parseInt(target),
+                        creator_name: name,
+                        category: "عام"
+                    })
+                });
+
+                if (response.ok) {
+                    if (socket && socket.readyState === WebSocket.OPEN) {
+                        socket.send(JSON.stringify({
+                            type: "HELP_REQUEST",
+                            username: name,
+                            count: target,
+                            title: title
+                        }));
+                    }
+                    
+                    alert("تم نشر النداء بنجاح!");
+                    history.back();
+                    loadCampaigns();
+                } else {
+                    alert("حدث خطأ أثناء حفظ النداء بالسيرفر");
+                }
+            } catch (e) {
+                console.error("Error sending help request:", e);
+                alert("تعذر الاتصال بالسيرفر");
+            }
+        }
+
+        // 9. إدارة الإحصائيات المحلية
+        function loadLocalStats() {
+            const stats = JSON.parse(localStorage.getItem('praise_stats')) || {
+                total: 0,
+                today: 0,
+                todayDate: new Date().toDateString(),
+                week: 0,
+                weekStart: getWeekStartDate()
+            };
+            
+            // إذا كان التاريخ تغير، أعد ضبط تسبيحات اليوم
+            if (stats.todayDate !== new Date().toDateString()) {
+                stats.today = 0;
+                stats.todayDate = new Date().toDateString();
+            }
+            
+            // إذا كان الأسبوع تغير، أعد ضبط تسبيحات الأسبوع
+            if (stats.weekStart !== getWeekStartDate()) {
+                stats.week = 0;
+                stats.weekStart = getWeekStartDate();
+            }
+            
+            totalCount = stats.total;
+            todayCount = stats.today;
+            
+            // تحديث واجهة الإحصائيات
+            document.getElementById('statTotal').innerText = stats.total;
+            document.getElementById('statWeek').innerText = stats.week;
+            document.getElementById('statPersons').innerText = persons.length;
+            
+            // حفظ الإحصائيات المحدثة
+            localStorage.setItem('praise_stats', JSON.stringify(stats));
+        }
+
+        function saveLocalStats() {
+            const stats = JSON.parse(localStorage.getItem('praise_stats')) || {
+                total: 0,
+                today: 0,
+                todayDate: new Date().toDateString(),
+                week: 0,
+                weekStart: getWeekStartDate()
+            };
+            
+            stats.total = totalCount;
+            stats.today = todayCount;
+            stats.todayDate = new Date().toDateString();
+            stats.week = (stats.week || 0) + 1; // زيادة تسبيحات الأسبوع
+            
+            localStorage.setItem('praise_stats', JSON.stringify(stats));
+            
+            // تحديث عرض الإحصائيات
+            document.getElementById('statTotal').innerText = stats.total;
+            document.getElementById('statWeek').innerText = stats.week;
+            document.getElementById('statPersons').innerText = persons.length;
+        }
+
+        function getWeekStartDate() {
+            const now = new Date();
+            const day = now.getDay();
+            const diff = now.getDate() - day + (day === 0 ? -6 : 1); // الإثنين هو أول الأسبوع
+            return new Date(now.setDate(diff)).toDateString();
+        }
+
+        // 10. إدارة الإعدادات والنوافذ
+        function saveUserName() {
+            const input = document.getElementById('userNameInput');
+            if(input && input.value.trim() !== "") {
+                localStorage.setItem('user_name', input.value);
+                alert("تم حفظ الاسم بنجاح");
+                history.back();
+            } else {
+                alert("يرجى كتابة الاسم");
+            }
+        }
+
+        function clearAllData() {
+            if(confirm("هل أنت متأكد من حذف جميع البيانات المحلية؟ هذا يشمل الإحصائيات والأشخاص المضافة.")) {
+                localStorage.clear();
+                persons = [];
+                localCount = 0;
+                todayCount = 0;
+                totalCount = 0;
+                activePersonId = null;
+                activeCampaignId = null;
+                
+                // إعادة تحميل الصفحة
+                location.reload();
+            }
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.add('active');
+                history.pushState({modalOpen: id}, "");
+            }
+        }
+
+        window.onpopstate = () => {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        };
+
+        function closeOnOverlay(e) {
+            if(e.target.classList.contains('modal')) {
+                history.back();
+            }
+        }
+
+        // 11. التعامل مع اتصال/انقطاع الإنترنت
+        window.addEventListener('online', () => {
+            console.log("عادت الشبكة! جاري مزامنة النقرات...");
+            initWebSocket(); // إعادة الاتصال بالويب سوكيت
+            syncOfflinePraises();
+        });
+
+        window.addEventListener('offline', () => {
+            console.log("فقدت الاتصال بالإنترنت... سيتم حفظ النقرات محلياً.");
+        });
+    </script>
+</body>
+</html>
