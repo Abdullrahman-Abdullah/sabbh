@@ -34,11 +34,6 @@ app.include_router(
     tags=["Community"]
 )
 
-# 3. تقديم ملفات الـ Frontend (PWA)
-# هذا السطر يجعل السيرفر يخدم ملفات الـ HTML/JS من مجلد static
-app.mount("/static", StaticFiles(directory="static"), name="static")
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from websocket_manager import manager  # استيراد المدير
 
 
 @app.websocket("/ws/help")

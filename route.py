@@ -177,5 +177,4 @@ async def contribute_to_campaign(campaign_id: int, count: int, db: Session = Dep
     campaign.current_count += count
     db.commit()
     db.refresh(campaign)
-
     return {"status": "success", "new_total": campaign.current_count}
