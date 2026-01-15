@@ -27,7 +27,11 @@ app.add_middleware(
 )
 
 
-
+app.include_router(
+    community_router, 
+    prefix="/api/v1/community", 
+    tags=["Community"]
+)
 
 
 @app.websocket("/ws/help")
@@ -66,4 +70,5 @@ async def root():
         "status": "Active",
         "docs": "/docs"  # رابط التوثيق التفاعلي Swagger
     }
+
 
